@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: supportflow
+  datasource:
+    url: jdbc:postgresql://localhost:5432/supportflow
+    username: samsa8590
+    password: supportflow
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080
