@@ -1,4 +1,4 @@
-package io.github.samsa8590.supportFlowApp.enums;
+package io.github.samsa8590.supportflow.enums;
 
 public enum Role {
     EMPLOYEE,

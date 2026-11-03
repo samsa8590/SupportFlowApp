@@ -1,4 +1,4 @@
-package io.github.samsa8590.supportFlowApp;
+package io.github.samsa8590.supportflow;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

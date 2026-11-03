@@ -1,4 +1,4 @@
-package io.github.samsa8590.supportFlowApp;
+package io.github.samsa8590.supportflow;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
