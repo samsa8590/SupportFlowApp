@@ -1,12 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 002
-      author: supportFlowApp
-
+      id: 002-create-tickets
+      author: samsa8590
       changes:
         - createTable:
             tableName: tickets
-
             columns:
               - column:
                   name: id
@@ -15,57 +13,74 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-
               - column:
                   name: title
-                  type: VARCHAR(150)
+                  type: VARCHAR(200)
                   constraints:
                     nullable: false
-
               - column:
                   name: description
-                  type: VARCHAR(2000)
+                  type: TEXT
                   constraints:
                     nullable: false
-
               - column:
                   name: status
-                  type: VARCHAR(50)
+                  type: VARCHAR(20)
+                  defaultValue: OPEN
                   constraints:
                     nullable: false
-
               - column:
                   name: priority
-                  type: VARCHAR(50)
+                  type: VARCHAR(20)
+                  defaultValue: MEDIUM
                   constraints:
                     nullable: false
-
+              - column:
+                  name: author_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_tickets_author
+                    references: employees(id)
+              - column:
+                  name: assignee_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_tickets_assignee
+                    references: employees(id)
+              - column:
+                  name: version
+                  type: BIGINT
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
                   type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
-
               - column:
                   name: updated_at
                   type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
-
-              - column:
-                  name: employee_id
-                  type: BIGINT
-
-        - addForeignKeyConstraint:
-            baseTableName: tickets
-            baseColumnNames: employee_id
-            referencedTableName: employees
-            referencedColumnNames: id
-            constraintName: fk_ticket_employee
-
         - createIndex:
             tableName: tickets
-            indexName: idx_ticket_status
+            indexName: idx_tickets_status
             columns:
               - column:
                   name: status
+        - createIndex:
+            tableName: tickets
+            indexName: idx_tickets_assignee
+            columns:
+              - column:
+                  name: assignee_id
+        - createIndex:
+            tableName: tickets
+            indexName: idx_tickets_author
+            columns:
+              - column:
+                  name: author_id

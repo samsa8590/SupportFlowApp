@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-seed-employees
+      author: samsa8590
+      comment: Демо-данные для ручной проверки API. password_hash - заглушка до появления Spring Security.
+      changes:
+        - insert:
+            tableName: employees
+            columns:
+              - column: { name: full_name, value: "Anna Employee" }
+              - column: { name: email, value: "employee@supportflow.local" }
+              - column: { name: password_hash, value: "{noop}changeme" }
+              - column: { name: role, value: "EMPLOYEE" }
+        - insert:
+            tableName: employees
+            columns:
+              - column: { name: full_name, value: "Boris Agent" }
+              - column: { name: email, value: "agent@supportflow.local" }
+              - column: { name: password_hash, value: "{noop}changeme" }
+              - column: { name: role, value: "AGENT" }
+        - insert:
+            tableName: employees
+            columns:
+              - column: { name: full_name, value: "Clara Admin" }
+              - column: { name: email, value: "admin@supportflow.local" }
+              - column: { name: password_hash, value: "{noop}changeme" }
+              - column: { name: role, value: "ADMIN" }

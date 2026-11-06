@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: supportflow_dev
 
     ports:
-      - "5432:5432"
+      - "5433:5432"
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -18,7 +18,11 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U supportflow -d supportflow"]
       interval: 5s
-      timeout: 5s
+      timeout: 5s2026-11-06T21:33:07.480+03:00  INFO 129487 --- [supportflow] [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-06T21:33:07.518+03:00  INFO 129487 --- [supportflow] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-06T21:33:07.586+03:00  INFO 129487 --- [supportflow] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-11-06T21:33:08.194+03:00  INFO 129487 --- [supportflow] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-11-06T21:33:08.199+03:00  INFO 129487 --- [supportflow] [  restartedMain] i.g.s.s.SupportFlowAppApplication        : Started SupportFlowAppApplication in 5.835 seconds (process running for 6.153)
       retries: 5
 
 volumes:

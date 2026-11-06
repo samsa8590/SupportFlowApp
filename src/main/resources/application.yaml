@@ -1,20 +1,22 @@
 spring:
   application:
     name: supportflow
-    devtools:
-        restart:
-          enabled: false
+
+  devtools:
+    restart:
+      enabled: false
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/supportflow
-    username: supportflow
-    password: supportflow_dev
+    url: jdbc:postgresql://localhost:5433/supportflow
+    username: ${DB_USERNAME:supportflow}
+    password: ${DB_PASSWORD:supportflow_dev}
     driver-class-name: org.postgresql.Driver
 
   jpa:
+    open-in-view: false
+    show-sql: true
     hibernate:
       ddl-auto: validate
-    show-sql: true
 
   liquibase:
     enabled: true

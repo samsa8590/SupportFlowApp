@@ -1,12 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 001
-      author: supportFlowApp
-
+      id: 001-create-employees
+      author: samsa8590
       changes:
         - createTable:
             tableName: employees
-
             columns:
               - column:
                   name: id
@@ -15,22 +13,38 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-
               - column:
-                  name: name
-                  type: VARCHAR(100)
+                  name: full_name
+                  type: VARCHAR(150)
                   constraints:
                     nullable: false
-
               - column:
                   name: email
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
                     unique: true
-
+                    uniqueConstraintName: uq_employees_email
+              - column:
+                  name: password_hash
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(20)
+                  defaultValue: EMPLOYEE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
                   type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false

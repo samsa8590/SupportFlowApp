@@ -1,19 +1,16 @@
 package io.github.samsa8590.supportflow.repository;
 
 import io.github.samsa8590.supportflow.entity.Ticket;
-import io.github.samsa8590.supportflow.enums.TicketStatus;
-import io.github.samsa8590.supportflow.enums.Priority;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
+public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecificationExecutor<Ticket> {
 
-public interface TicketRepository
-        extends JpaRepository<Ticket, Long> {
-
-    List<Ticket> findByStatus(TicketStatus status);
-
-    List<Ticket> findByPriority(Priority priority);
-
-    List<Ticket> findByEmployeeId(Long employeeId);
+    @Override
+    @EntityGraph(attributePaths = {"author", "assignee"})
+    Page<Ticket> findAll(Specification<Ticket> spec, Pageable pageable);
 }
