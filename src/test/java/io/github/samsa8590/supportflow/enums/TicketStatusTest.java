@@ -7,14 +7,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Чистый юнит-тест: ни Spring, ни базы данных. Проверяем только логику enum,
- * поэтому тест выполняется за миллисекунды.
- */
 class TicketStatusTest {
 
-    // @ParameterizedTest запускает один и тот же тест для каждой строки из @CsvSource.
-    // Так мы описываем всю таблицу допустимых переходов компактно, а не 6 копиями кода.
     @ParameterizedTest(name = "{0} -> {1} разрешён")
     @CsvSource({
             "OPEN, IN_PROGRESS",
@@ -25,7 +19,6 @@ class TicketStatusTest {
     })
     @DisplayName("Допустимые переходы")
     void allowedTransitions(TicketStatus from, TicketStatus to) {
-        // JUnit сам превращает строки "OPEN" из CSV в значения enum
         assertThat(from.canTransitionTo(to)).isTrue();
     }
 
@@ -57,8 +50,6 @@ class TicketStatusTest {
     @Test
     @DisplayName("Для каждого статуса набор переходов не содержит его самого")
     void noSelfTransitions() {
-        // Страховка на будущее: если кто-то добавит новый статус и забудет правило,
-        // а заодно случайно разрешит переход "в себя", тест упадёт.
         for (TicketStatus status : TicketStatus.values()) {
             assertThat(status.allowedTransitions()).doesNotContain(status);
         }

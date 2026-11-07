@@ -33,13 +33,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * Юнит-тест сервиса. Главная идея: проверяем ТОЛЬКО логику TicketService.
- * Репозитории заменены "заглушками" (mock): они не ходят в базу, а отвечают так,
- * как мы им скажем через when(...).thenReturn(...). Поэтому тест быстрый и
- * не зависит ни от Docker, ни от PostgreSQL.
- */
-@ExtendWith(MockitoExtension.class) // включает @Mock и строгую проверку: неиспользованная заглушка = ошибка
+
+@ExtendWith(MockitoExtension.class)
 class TicketServiceTest {
 
     @Mock
@@ -52,8 +47,6 @@ class TicketServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Мапперы простые и без логики - используем настоящие, а не моки.
-        // Правило: мокаем то, что ходит наружу (БД, сеть), а простые вещи берём как есть.
         service = new TicketService(ticketRepository, employeeRepository,
                 new TicketMapper(new EmployeeMapper()));
     }
@@ -65,13 +58,11 @@ class TicketServiceTest {
     void createUsesDefaults() {
         Employee author = employee(1L, Role.EMPLOYEE, true);
         when(employeeRepository.findById(1L)).thenReturn(Optional.of(author));
-        // save() в реальности вернул бы сущность с id; здесь просто возвращаем то, что передали
         when(ticketRepository.save(any(Ticket.class))).thenAnswer(inv -> inv.getArgument(0));
 
         TicketResponse response = service.create(
                 new CreateTicketRequest("VPN", "Не подключается", null, 1L));
 
-        // ArgumentCaptor "перехватывает" объект, который сервис передал в save()
         ArgumentCaptor<Ticket> captor = ArgumentCaptor.forClass(Ticket.class);
         verify(ticketRepository).save(captor.capture());
         Ticket saved = captor.getValue();
@@ -103,7 +94,6 @@ class TicketServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("99");
 
-        // Важная проверка: при ошибке в базу ничего не записали
         verify(ticketRepository, never()).save(any());
     }
 
@@ -142,8 +132,6 @@ class TicketServiceTest {
 
         assertThat(response.status()).isEqualTo(TicketStatus.IN_PROGRESS);
         assertThat(ticket.getStatus()).isEqualTo(TicketStatus.IN_PROGRESS);
-        // save() не вызывается: в реальном приложении изменение сохраняет Hibernate при
-        // коммите транзакции (dirty checking). Тест фиксирует это поведение.
         verify(ticketRepository, never()).save(any());
     }
 
@@ -158,7 +146,7 @@ class TicketServiceTest {
                 .hasMessageContaining("OPEN")
                 .hasMessageContaining("CLOSED");
 
-        assertThat(ticket.getStatus()).isEqualTo(TicketStatus.OPEN); // статус не изменился
+        assertThat(ticket.getStatus()).isEqualTo(TicketStatus.OPEN);
     }
 
     @Test
@@ -253,8 +241,7 @@ class TicketServiceTest {
     void assignClosedTicket() {
         Ticket ticket = ticket(1L, TicketStatus.CLOSED, null);
         when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
-        // employeeRepository не заглушаем: сервис должен упасть раньше, до поиска сотрудника.
-        // Если бы мы добавили здесь лишний when(...), MockitoExtension сообщил бы о нём.
+
 
         assertThatThrownBy(() -> service.assign(1L, new AssignTicketRequest(2L)))
                 .isInstanceOf(BusinessException.class);
